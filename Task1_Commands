@@ -1,0 +1,30 @@
+1. Run the following command to deploy your stack
+
+aws cloudformation deploy \
+  --template-file config.cf.yaml \
+  --stack-name task-1 \
+  --region ap-south-1 \
+  --capabilities CAPABILITY_IAM \
+  --parameter-overrides KeyName=my-keypair
+
+2. To clean slate, run
+
+aws cloudformation delete-stack --stack-name task-1 --region ap-south-1
+
+3. You can check the status with:
+
+aws cloudformation describe-stacks --stack-name task-1 --region ap-south-1
+
+
+4. To list all AWS accounts (profiles) configured for use with the AWS CLI, you use the following command:
+
+aws configure list-profiles
+
+This command lists all profiles defined in your ~/.aws/config and ~/.aws/credentials files
+
+5. To check which AWS account is currently active (the one you are using right now), use:
+
+aws sts get-caller-identity
+
+
+

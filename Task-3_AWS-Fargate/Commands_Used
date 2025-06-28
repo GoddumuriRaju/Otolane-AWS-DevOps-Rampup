@@ -1,0 +1,10 @@
+aws ecr create-repository --repository-name hello-express-repo --region us-east-1
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 266612353896.dkr.ecr.us-east-1.amazonaws.com
+docker tag hello-express:latest 266612353896.dkr.ecr.us-east-1.amazonaws.com/hello-express-repo:latest
+docker push 266612353896.dkr.ecr.us-east-1.amazonaws.com/hello-express-repo:latest 
+aws cloudformation create-stack   --stack-name express-ecs-stack-updated   --template-body file://ecs-stack.yaml   --parameters ParameterKey=Image,ParameterValue=266612353896.dkr.ecr.us-east-1.amazonaws.com/hello-express-repo:latest   --capabilities CAPABILITY_IAM   --region us-east-1
+aws cloudformation describe-stacks --stack-name express-ecs-stack-updated --region us-east-1
+aws ecs list-clusters --region us-east-1
+aws ecs list-tasks --cluster express-ecs-stack-updated-ECSCluster-ojO2DeSn8a1s --region us-east-1
+aws ecs describe-tasks --cluster express-ecs-stack-updated-ECSCluster-ojO2DeSn8a1s --tasks arn:aws:ecs:us-east-1:266612353896:task/express-ecs-stack-updated-ECSCluster-ojO2DeSn8a1s/fefab84a3cbb44eba62fbe0636fe4c23 --region us-east-1
+aws ec2 describe-network-interfaces --network-interface-ids eni-0483d4d3a743c3c77 --region us-east-1 --query "NetworkInterfaces[0].Association.PublicIp" --output text
